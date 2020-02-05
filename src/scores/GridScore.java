@@ -1,3 +1,8 @@
+/**
+ * Created by: Jake Stephens
+ * Class that contains the scores for the grid test
+ */
+
 package scores;
 
 public class GridScore extends Score {

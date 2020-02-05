@@ -1,3 +1,8 @@
+/**
+ * Created by: Jake Stephens
+ * Class that contains all the info for the GUI
+ */
+
 package gui;
 
 import javax.swing.*;

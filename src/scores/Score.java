@@ -1,3 +1,8 @@
+/**
+ * Created by: Jake Stephens
+ * Abstract class that contains the method signatures for the child classes to implement
+ */
+
 package scores;
 
 public abstract class Score {

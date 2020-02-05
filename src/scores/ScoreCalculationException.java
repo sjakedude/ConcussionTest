@@ -1,3 +1,8 @@
+/**
+ * Created by: Jake Stephens
+ * User defined unchecked Exception class
+ */
+
 package scores;
 
 public class ScoreCalculationException extends Exception {

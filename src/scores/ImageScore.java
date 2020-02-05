@@ -1,3 +1,8 @@
+/**
+ * Created by: Jake Stephens
+ * Class that contains the scores for the image test
+ */
+
 package scores;
 
 public class ImageScore extends Score {

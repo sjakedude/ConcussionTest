@@ -1,3 +1,7 @@
+/**
+ * Created by: Jake Stephens
+ * Main driver class for the application
+ */
 package driver;
 
 import gui.Gui;

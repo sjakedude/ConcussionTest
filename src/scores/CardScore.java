@@ -1,3 +1,7 @@
+/**
+ * Created by: Jake Stephens
+ * Class that contains the scores for the card test
+ */
 package scores;
 
 public class CardScore extends Score {

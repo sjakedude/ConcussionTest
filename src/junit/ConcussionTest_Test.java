@@ -1,3 +1,7 @@
+/**
+ * Created by: Jake Stephens
+ * Junit test class for the ConcussionTest application
+ */
 package junit;
 
 import driver.ConcussionTest;
