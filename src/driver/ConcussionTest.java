@@ -7,7 +7,6 @@ package driver;
 import gui.Gui;
 import scores.*;
 
-import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.text.DecimalFormat;
