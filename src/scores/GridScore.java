@@ -39,4 +39,8 @@ public class GridScore extends Score {
     public void calculateScore() {
         this.percentageScore = 100 * ((double)numCorrect / (double)totalPossible);
     }
+
+    public String toString() {
+        return "The user's card score numCorrect: " + this.numCorrect + " and totalPossible: " + this.totalPossible;
+    }
 }

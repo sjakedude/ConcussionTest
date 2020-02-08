@@ -37,4 +37,8 @@ public class ImageScore extends Score {
     public void calculateScore() {
         this.percentageScore = 100 * ((double)numCorrect / ((double)numCorrect + (double)numMissed));
     }
+
+    public String toString() {
+        return "The user's image score numCorrect: " + this.numCorrect + " and numMissed: " + this.numMissed;
+    }
 }

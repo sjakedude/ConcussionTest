@@ -26,7 +26,6 @@ public class ConcussionTest {
 
         System.out.println("About to end");
 
-
         // Createing 3 scores (right now for testing purposes)
         Score imageScore = new ImageScore(10, 3);
         Score gridScore = new GridScore(10, 10);
@@ -50,6 +49,15 @@ public class ConcussionTest {
         printScoresWithPercent(scores);
         // Saving the scores to a text file
         saveScores(scores);
+
+        // Creating instances of the generic class and testing it out
+        RoundCalculator imageRounds = new RoundCalculator(imageScore);
+        RoundCalculator gridRounds = new RoundCalculator(gridScore);
+        gridRounds.increaseRounds();
+        gridRounds.increaseRounds();
+        gridRounds.increaseRounds();
+        System.out.println(imageRounds.toString());
+        System.out.println(gridRounds.toString());
     }
 
     /**

@@ -58,4 +58,20 @@ public class ConcussionTest_Test {
             assertEquals(false, exceptionThrown);
         }
     }
+
+
+    /**
+     * This Test will make sure that the generic class RoundCalculator
+     * is working as expected.
+     */
+    @Test
+    public void testRoundCalculator() {
+        RoundCalculator testImageRounds = new RoundCalculator(testImageScore);
+        testImageRounds.increaseRounds();
+        testImageRounds.increaseRounds();
+        testImageRounds.increaseRounds();
+
+        assertEquals(3, testImageRounds.getRounds());
+        assertEquals("The user's image score numCorrect: 4 and numMissed: 5 with rounds: 3", testImageRounds.toString());
+    }
 }
