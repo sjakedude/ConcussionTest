@@ -1,6 +1,10 @@
 /**
- * Created by: Jake Stephens
- * Class that contains the scores for the card test
+ * CS-622 HW 2
+ * CardScore.java
+ * Purpose: Holds the users score on the card test
+ *
+ * @author Jake Stephens
+ * @version 1.0 2/11/2020
  */
 package scores;
 

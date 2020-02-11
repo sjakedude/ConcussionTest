@@ -1,6 +1,10 @@
 /**
- * Created by: Jake Stephens
- * Main driver class for the application
+ * CS-622 HW 2
+ * ConcussionTest.java
+ * Purpose: Main driver class for the application
+ *
+ * @author Jake Stephens
+ * @version 1.0 2/11/2020
  */
 package driver;
 

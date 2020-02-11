@@ -1,6 +1,10 @@
 /**
- * Created by: Jake Stephens
- * Junit test class for the ConcussionTest application
+ * CS-622 HW 2
+ * ConcussionTest_Test.java
+ * Purpose: Junit test class for the ConcussionTest application
+ *
+ * @author Jake Stephens
+ * @version 1.0 2/11/2020
  */
 package junit;
 
@@ -59,13 +63,12 @@ public class ConcussionTest_Test {
         }
     }
 
-
     /**
      * This Test will make sure that the generic class RoundCalculator
-     * is working as expected.
+     * is working as expected for increasing the number of rounds.
      */
     @Test
-    public void testRoundCalculator() {
+    public void testRoundCalculatorIncrement() {
         RoundCalculator testImageRounds = new RoundCalculator(testImageScore);
         testImageRounds.increaseRounds();
         testImageRounds.increaseRounds();
@@ -74,4 +77,21 @@ public class ConcussionTest_Test {
         assertEquals(3, testImageRounds.getRounds());
         assertEquals("The user's image score numCorrect: 4 and numMissed: 5 with rounds: 3", testImageRounds.toString());
     }
+
+    /**
+     * This Test will make sure that the generic class RoundCalculator
+     * is working as expected for decreasing the number of rounds.
+     */
+    @Test
+    public void testRoundCalculatorDecrement() {
+        RoundCalculator testImageRounds = new RoundCalculator(testImageScore);
+        testImageRounds.increaseRounds();
+        testImageRounds.increaseRounds();
+        testImageRounds.increaseRounds();
+        testImageRounds.decreaseRounds();
+
+        assertEquals(2, testImageRounds.getRounds());
+        assertEquals("The user's image score numCorrect: 4 and numMissed: 5 with rounds: 2", testImageRounds.toString());
+    }
+
 }

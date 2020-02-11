@@ -1,8 +1,11 @@
 /**
- * Created by: Jake Stephens
- * Class that contains the scores for the image test
+ * CS-622 HW 2
+ * ImageScore.java
+ * Purpose: Holds the users score on the image test
+ *
+ * @author Jake Stephens
+ * @version 1.0 2/11/2020
  */
-
 package scores;
 
 public class ImageScore extends Score {

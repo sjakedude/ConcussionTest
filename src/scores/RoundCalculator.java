@@ -1,6 +1,10 @@
 /**
- * Created by: Jake Stephens
- * Generic class that helps keep track of the number of rounds
+ * CS-622 HW 2
+ * RoundCalculator.java
+ * Purpose: Generic class that helps keep track of the number of rounds
+ *
+ * @author Jake Stephens
+ * @version 1.0 2/11/2020
  */
 package scores;
 
@@ -28,6 +32,13 @@ public class RoundCalculator<S> {
     // Method to increment the number of rounds by 1
     public void increaseRounds() {
         this.rounds = rounds + 1;
+    }
+
+    // Method to decrease the number of rounds by 1
+    public void decreaseRounds() {
+        if (this.rounds != 0) {
+            this.rounds = rounds - 1;
+        }
     }
 
     // Method that returns the object
