@@ -12,7 +12,7 @@ public class RoundCalculator<S> {
 
     // The instance variables of this class
     private S object;
-    private int rounds = 0;
+    private int rounds = 1;
 
     // Empty constructor
     public RoundCalculator() {
@@ -21,7 +21,7 @@ public class RoundCalculator<S> {
     // Constructor for creating a RoundCalculator object
     public RoundCalculator(S o) {
         this.object = o;
-        this.rounds = 0;
+        this.rounds = 1;
     }
 
     // Method that returns a number of rounds

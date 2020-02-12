@@ -74,8 +74,8 @@ public class ConcussionTest_Test {
         testImageRounds.increaseRounds();
         testImageRounds.increaseRounds();
 
-        assertEquals(3, testImageRounds.getRounds());
-        assertEquals("The user's image score numCorrect: 4 and numMissed: 5 with rounds: 3", testImageRounds.toString());
+        assertEquals(4, testImageRounds.getRounds());
+        assertEquals("The user's image score numCorrect: 4 and numMissed: 5 with rounds: 4", testImageRounds.toString());
     }
 
     /**
@@ -90,8 +90,8 @@ public class ConcussionTest_Test {
         testImageRounds.increaseRounds();
         testImageRounds.decreaseRounds();
 
-        assertEquals(2, testImageRounds.getRounds());
-        assertEquals("The user's image score numCorrect: 4 and numMissed: 5 with rounds: 2", testImageRounds.toString());
+        assertEquals(3, testImageRounds.getRounds());
+        assertEquals("The user's image score numCorrect: 4 and numMissed: 5 with rounds: 3", testImageRounds.toString());
     }
 
 }

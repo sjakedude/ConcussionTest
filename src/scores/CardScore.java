@@ -11,7 +11,7 @@ package scores;
 public class CardScore extends Score {
 
     private int numCorrect;
-    private int totalRounds;
+    private int numWrong;
     private String card;
 
     public CardScore() {
@@ -19,7 +19,7 @@ public class CardScore extends Score {
 
     public CardScore(int numCorrect, int totalRounds, String card) {
         this.numCorrect = numCorrect;
-        this.totalRounds = totalRounds;
+        this.numWrong = numWrong;
         this.card = card;
     }
 
@@ -27,8 +27,8 @@ public class CardScore extends Score {
         this.numCorrect = numCorrect;
     }
 
-    public void setTotalRounds(int totalRounds) {
-        this.totalRounds = totalRounds;
+    public void setNumWrong(int numWrong) {
+        this.numWrong = numWrong;
     }
 
     public void setCard(String card) {
@@ -37,17 +37,17 @@ public class CardScore extends Score {
 
     public int getNumCorrect() { return this.numCorrect; }
 
-    public int getTotalRounds() { return this.totalRounds; }
+    public int getNumWrong() { return this.numWrong; }
 
     public String getCard() { return this.card; }
 
     @Override
     public String printScore() {
-        return "User got " + this.numCorrect + " out of " + this.totalRounds + " rounds in card test";
+        return "User got " + this.numCorrect + " out of " + this.numWrong + " rounds in card test";
     }
 
     @Override
     public void calculateScore() {
-        this.percentageScore = 100 * ((double)this.numCorrect / (double)this.totalRounds);
+        this.percentageScore = 100 * ((double)this.numCorrect / ((double) this.numCorrect + (double)this.numWrong));
     }
 }
