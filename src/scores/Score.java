@@ -8,7 +8,9 @@
  */
 package scores;
 
-public abstract class Score {
+import java.io.Serializable;
+
+public abstract class Score implements Serializable {
 
     protected double percentageScore;
 
