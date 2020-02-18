@@ -21,9 +21,21 @@ import java.util.Scanner;
 
 public class ConcussionTest {
 
+    // File locations
     static String outputObjectScoresFile = "score_objects_scores.dat";
     static String outputObjectPassFailFile = "score_objects_pass_fail.dat";
     static String inputConcussionDataFile = "concussion_data.txt";
+
+    // Createing 3 scores (right now for testing purposes)
+    static Score imageScore = new ImageScore();
+    static Score gridScore = new GridScore();
+    static Score cardScore = new CardScore();
+
+    // Creating a list of Scores
+    static List<RoundCalculator> scores = new ArrayList<>();
+
+    static Scanner in = new Scanner(System.in);
+
 
     /**
      * Main method of the application
@@ -31,13 +43,7 @@ public class ConcussionTest {
      */
     public static void main(String[] args) {
 
-        // Createing 3 scores (right now for testing purposes)
-        Score imageScore = new ImageScore(10, 3);
-        Score gridScore = new GridScore(10, 10);
-        Score cardScore = new CardScore(2, 3, "Queen of hearts");
-
-        // Creating a list of Scores and adding them to the list
-        List<RoundCalculator> scores = new ArrayList<>();
+        // Adding the Score objects to the list of scores
         scores.add(new RoundCalculator(imageScore));
         scores.add(new RoundCalculator(gridScore));
         scores.add(new RoundCalculator(cardScore));
@@ -57,43 +63,192 @@ public class ConcussionTest {
             System.out.println("9. Perform aggregations on concussion data from file");
             System.out.println("10. Exit");
 
-            Scanner in = new Scanner(System.in);
             String option = in.nextLine();
             switch (option) {
                 case "1": enterScoresMenu();
-                case "2": enterRoudnsMenu();
+                    break;
+                case "2": enterRoundsMenu();
+                    break;
                 case "3":
                     // Calculating the percentage scores for each score
                     try {
                         calculateAllScores(scores);
+                        System.out.println("Scores successfully calculated");
                     } catch (ScoreCalculationException e) {
                         e.printStackTrace();
                         System.out.println("Score calculation error, one of the scores must have had a divide by 0 error");
                     }
+                    break;
                 case "4": printScores(scores);
+                    break;
                 case "5": printScoresWithPercent(scores);
+                    break;
                 case "6": saveScores(scores);
+                    break;
                 case "7": saveScoresAsObjects(scores);
+                    break;
                 case "8": saveObjectPassFailScores();
+                    break;
                 case "9":
                     // Reading in the concussion data file
                     List<ConcussionDataRow> concussionData = readInConcussionData();
                     // Performing the aggregations
                     performAggregations(concussionData);
-                case "10": System.exit(0);
+                    break;
+                case "10":
+                    // Ending the program
+                    System.exit(0);
             }
         }
+    }
 
+    /**
+     * Method for printing out the main menu for entering scores
+     */
+    public static void enterScoresMenu() {
+        /*
+         * Precondition: None
+         * Postcondition: The user will have enters an integer between or including 1 and 4.
+         */
 
+        // Initializing done to false so the while loop can be broken
+        boolean done = false;
 
-        // Creating instances of the generic class and testing it out
-        RoundCalculator imageRounds = new RoundCalculator(imageScore);
-        RoundCalculator gridRounds = new RoundCalculator(gridScore);
-        gridRounds.increaseRounds();
-        gridRounds.increaseRounds();
-        gridRounds.increaseRounds();
-        System.out.println(imageRounds.toString());
-        System.out.println(gridRounds.toString());
+        // Main loop
+        while (!done) {
+            // Pringing out the enter scores menu
+            System.out.println("============Enter Scores============");
+            System.out.println("1. Enter scores for image test");
+            System.out.println("2. Enter scores for grid test");
+            System.out.println("3. Enter scores for card test");
+            System.out.println("4. Return to main menu");
+
+            // Grabbing user input
+            String option = in.nextLine();
+
+            // Calling the appropriate action
+            switch (option) {
+                case "1": enterImageScore();
+                    break;
+                case "2": enterGridScore();
+                    break;
+                case "3": enterCardScores();
+                    break;
+                case "4": done = true;
+            }
+        }
+    }
+
+    /**
+     * Method for entering the scores from the image test
+     */
+    public static void enterImageScore() {
+        /*
+         * Precondition: An array list of RoundCalculator objects is initialized with a ImageScore object within
+         * the [0] index of the array.
+         * Postcondition: The user will have entered 2 integers those values will be saved within the CardScore object.
+         */
+
+        System.out.println("Enter number user got correct: ");
+        int numCorrect = in.nextInt();
+        System.out.println("Enter number user missed: ");
+        int numMissed = in.nextInt();
+        ((ImageScore)scores.get(0).getObject()).setNumCorrect(numCorrect);
+        ((ImageScore)scores.get(0).getObject()).setNumMissed(numMissed);
+    }
+
+    /**
+     * Method for entering the scores from the grid test
+     */
+    public static void enterGridScore() {
+        /*
+         * Precondition: An array list of RoundCalculator objects is initialized with a GridScore object within
+         * the [1] index of the array.
+         * Postcondition: The user will have entered 2 integers and they will be saved within the CardScore object.
+         */
+
+        System.out.println("Enter number user got correct: ");
+        int numCorrect = in.nextInt();
+        System.out.println("Enter total number of trials: ");
+        int totalPossible = in.nextInt();
+        ((GridScore)scores.get(1).getObject()).setNumCorrect(numCorrect);
+        ((GridScore)scores.get(1).getObject()).setTotalPossible(totalPossible);
+    }
+
+    /**
+     * Method for entering the scores from the card test
+     */
+    public static void enterCardScores() {
+        /*
+         * Precondition: An array list of RoundCalculator objects is initialized with a CardScore object within
+         * the [2] index of the array.
+         * Postcondition: The user will have entered 2 integers and 1 string and those values will be saved in
+         * the CardScore object.
+         */
+
+        System.out.println("Enter number user got correct: ");
+        int numCorrect = in.nextInt();
+        System.out.println("Enter number user got wrong: ");
+        int numWrong = in.nextInt();
+        System.out.println("Enter the card the user choose: ");
+        String card = in.nextLine();
+        ((CardScore)scores.get(2).getObject()).setNumCorrect(numCorrect);
+        ((CardScore)scores.get(2).getObject()).setNumWrong(numWrong);
+        ((CardScore)scores.get(2).getObject()).setCard(card);
+    }
+
+    /**
+     * Method for modifying the number of rounds for each test
+     */
+    public static void enterRoundsMenu() {
+        /*
+         * Precondition: There exists a scores ArrayList which contains 3 objects, one of an ImageScore object,
+         * another of a GridScore object and a third of a CardScore object.
+         * Postcondition: The user will have enters an integer between or including 1 and 7 and the number of rounds
+         * for each test may or may not have been modified depending on the users inputs.
+         */
+
+        // Setting done to false so the loop will continue
+        boolean done = false;
+
+        // Main loop for the rounds modification menu
+        while (!done) {
+            // Pringing out the enter rounds menu
+            System.out.println("============Enter Rounds============");
+            System.out.println("1. Increment rounds for image test");
+            System.out.println("2. Decrease rounds for image test");
+            System.out.println("3. Increment rounds for grid test");
+            System.out.println("4. Decrement rounds for grid test");
+            System.out.println("5. Increment rounds for card test");
+            System.out.println("6. Decrement rounds for card test");
+            System.out.println("7. Return to main menu");
+
+            // Grabbing user input
+            String option = in.nextLine();
+
+            // Calling the appropriate action
+            switch (option) {
+                case "1": scores.get(0).increaseRounds();
+                    System.out.println("Current rounds for Image Test: " + scores.get(0).getRounds());
+                    break;
+                case "2": scores.get(0).decreaseRounds();
+                    System.out.println("Current rounds for Image Test: " + scores.get(0).getRounds());
+                    break;
+                case "3": scores.get(1).increaseRounds();
+                    System.out.println("Current rounds for Grid Test: " + scores.get(1).getRounds());
+                    break;
+                case "4": scores.get(1).decreaseRounds();
+                    System.out.println("Current rounds for Grid Test: " + scores.get(1).getRounds());
+                    break;
+                case "5": scores.get(2).increaseRounds();
+                    System.out.println("Current rounds for Card Test: " + scores.get(2).getRounds());
+                    break;
+                case "6": scores.get(2).decreaseRounds();
+                    System.out.println("Current rounds for Card Test: " + scores.get(2).getRounds());
+                    break;
+                case "7": done = true;
+            }
+        }
     }
 
     /**
@@ -210,6 +365,7 @@ public class ConcussionTest {
          *
          * Postcondition: All Score objects are written out to the binary file outputObjectScoresFile.
          */
+
         try {
             try (ObjectOutputStream outFile = new ObjectOutputStream(new FileOutputStream(outputObjectScoresFile));) {
                 // Looping through each score and saving it to the binary file

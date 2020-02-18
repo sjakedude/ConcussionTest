@@ -23,7 +23,7 @@ public class ConcussionTest_Test {
     Score testCardScore = new CardScore(3, 0, "Queen of hearts");
     Score testGridScore = new GridScore(5, 8);
     Score testImageScore = new ImageScore(4, 5);
-    List<Score> testScores = new ArrayList<>();
+    List<RoundCalculator> testScores = new ArrayList<>();
 
     /**
      * This Test will make sure that the correct exception is thrown when there is
@@ -31,9 +31,9 @@ public class ConcussionTest_Test {
      */
     @Test
     public void testCalculateAllScores() {
-        testScores.add(testCardScore);
-        testScores.add(testGridScore);
-        testScores.add(testImageScore);
+        testScores.add(new RoundCalculator(testCardScore));
+        testScores.add(new RoundCalculator(testGridScore));
+        testScores.add(new RoundCalculator(testImageScore));
 
         boolean exceptionThrown = false;
 
