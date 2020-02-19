@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 public class ConcussionTest_Test {
 
     ConcussionTest testConcussionTest = new ConcussionTest();
-    Score testCardScore = new CardScore(3, 0, "Queen of hearts");
+    Score testCardScore = new CardScore(0, 0, "Queen of hearts");
     Score testGridScore = new GridScore(5, 8);
     Score testImageScore = new ImageScore(4, 5);
     List<RoundCalculator> testScores = new ArrayList<>();
@@ -49,7 +49,7 @@ public class ConcussionTest_Test {
 
         // Removing the score that was causing the exceptopn to be thrown and
         // resetting the exceptionThrown flag to false
-        testScores.remove(testCardScore);
+        testScores.remove(0);
         exceptionThrown = false;
 
         // Calling the method expecting the exception not to be thrown

@@ -90,10 +90,7 @@ public class ConcussionTest {
                 case "8": saveObjectPassFailScores();
                     break;
                 case "9":
-                    // Reading in the concussion data file
-                    List<ConcussionDataRow> concussionData = readInConcussionData();
-                    // Performing the aggregations
-                    performAggregations(concussionData);
+                    performAggregations();
                     break;
                 case "10":
                     // Ending the program
@@ -135,6 +132,7 @@ public class ConcussionTest {
                 case "3": enterCardScores();
                     break;
                 case "4": done = true;
+                    break;
             }
         }
     }
@@ -150,11 +148,11 @@ public class ConcussionTest {
          */
 
         System.out.println("Enter number user got correct: ");
-        int numCorrect = in.nextInt();
+        String numCorrect = in.nextLine();
         System.out.println("Enter number user missed: ");
-        int numMissed = in.nextInt();
-        ((ImageScore)scores.get(0).getObject()).setNumCorrect(numCorrect);
-        ((ImageScore)scores.get(0).getObject()).setNumMissed(numMissed);
+        String numMissed = in.nextLine();
+        ((ImageScore)scores.get(0).getObject()).setNumCorrect(Integer.parseInt(numCorrect));
+        ((ImageScore)scores.get(0).getObject()).setNumMissed(Integer.parseInt(numMissed));
     }
 
     /**
@@ -168,11 +166,11 @@ public class ConcussionTest {
          */
 
         System.out.println("Enter number user got correct: ");
-        int numCorrect = in.nextInt();
+        String numCorrect = in.nextLine();
         System.out.println("Enter total number of trials: ");
-        int totalPossible = in.nextInt();
-        ((GridScore)scores.get(1).getObject()).setNumCorrect(numCorrect);
-        ((GridScore)scores.get(1).getObject()).setTotalPossible(totalPossible);
+        String totalPossible = in.nextLine();
+        ((GridScore)scores.get(1).getObject()).setNumCorrect(Integer.parseInt(numCorrect));
+        ((GridScore)scores.get(1).getObject()).setTotalPossible(Integer.parseInt(totalPossible));
     }
 
     /**
@@ -187,13 +185,13 @@ public class ConcussionTest {
          */
 
         System.out.println("Enter number user got correct: ");
-        int numCorrect = in.nextInt();
+        String numCorrect = in.nextLine();
         System.out.println("Enter number user got wrong: ");
-        int numWrong = in.nextInt();
+        String numWrong = in.nextLine();
         System.out.println("Enter the card the user choose: ");
         String card = in.nextLine();
-        ((CardScore)scores.get(2).getObject()).setNumCorrect(numCorrect);
-        ((CardScore)scores.get(2).getObject()).setNumWrong(numWrong);
+        ((CardScore)scores.get(2).getObject()).setNumCorrect(Integer.parseInt(numCorrect));
+        ((CardScore)scores.get(2).getObject()).setNumWrong(Integer.parseInt(numWrong));
         ((CardScore)scores.get(2).getObject()).setCard(card);
     }
 
@@ -259,27 +257,28 @@ public class ConcussionTest {
     public static void calculateAllScores(List<RoundCalculator> scores) throws ScoreCalculationException {
         // Looping through each score in the list and calculating the percentage score
         for (RoundCalculator rc : scores) {
-            ((Score)rc.getObject()).calculateScore();
-            if (Double.isInfinite(((Score)rc.getObject()).getPercentageScore())) {
+            Score score = (Score) rc.getObject();
+            score.calculateScore();
+            if (((Double)score.getPercentageScore()).isNaN()) {
                 // Unchecked exception occurred, time to throw the exception
                 // If score is instance of CardScore and throw a ScoreCalculationException
                 // with the appropriate message
-                if (rc.getObject() instanceof CardScore) {
-                    if (((CardScore) rc.getObject()).getNumCorrect() + ((CardScore) rc.getObject()).getNumWrong() == 0) {
+                if (score instanceof CardScore) {
+                    if (((CardScore) score).getNumCorrect() + ((CardScore) score).getNumWrong() == 0) {
                         throw new ScoreCalculationException("total rounds is equal to 0, cannot divide by 0 score");
                     }
                 }
                 // If score is instance of GridScore and throw a ScoreCalculationException
                 // with the appropriate message
-                if (rc.getObject() instanceof GridScore) {
-                    if ((((GridScore) rc.getObject()).getTotalPossible() == 0)) {
+                if (score instanceof GridScore) {
+                    if ((((GridScore) score).getTotalPossible() == 0)) {
                         throw new ScoreCalculationException("total possible is equal to 0, cannot divide by 0 to calculate score");
                     }
                 }
                 // If score is instance of ImageScore and throw a ScoreCalculationException
                 // with the appropriate message
-                if (rc.getObject() instanceof ImageScore) {
-                    if ((((ImageScore) rc.getObject()).getNumCorrect() + ((ImageScore) rc.getObject()).getNumMissed()) == 0) {
+                if (score instanceof ImageScore) {
+                    if ((((ImageScore) score).getNumCorrect() + ((ImageScore) score).getNumMissed()) == 0) {
                         throw new ScoreCalculationException("numCorrect plus numMissed is equal to 0, cannot divide by 0 to calculate score");
                     }
                 }
@@ -465,14 +464,16 @@ public class ConcussionTest {
 
     /**
      * Method that performs stream transformations on the concussion dataset
-     * @param data
      */
-    public static void performAggregations(List<ConcussionDataRow> data) {
+    public static void performAggregations() {
         /*
          * Precondition: data is a fully populated list of ConcussionDataRow objects
          *
          * Postcondition: Results of the below calculations are printed on the screen
          */
+
+        // Reading in the concussion data file
+        List<ConcussionDataRow> data = readInConcussionData();
 
         // Calculating number of people concussed in 2000
         long numConcussed = data.stream()

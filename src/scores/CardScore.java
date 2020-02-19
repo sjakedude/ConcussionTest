@@ -17,7 +17,7 @@ public class CardScore extends Score {
     public CardScore() {
     }
 
-    public CardScore(int numCorrect, int totalRounds, String card) {
+    public CardScore(int numCorrect, int numWrong, String card) {
         this.numCorrect = numCorrect;
         this.numWrong = numWrong;
         this.card = card;
