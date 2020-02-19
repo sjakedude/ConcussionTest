@@ -29,8 +29,6 @@ public class GridScore extends Score {
         this.totalPossible = totalPossible;
     }
 
-    public int getNumCorrect() { return this.numCorrect; }
-
     public int getTotalPossible() { return this.totalPossible; }
 
     @Override

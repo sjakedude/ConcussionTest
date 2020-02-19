@@ -14,10 +14,6 @@ public class RoundCalculator<S> {
     private S object;
     private int rounds = 1;
 
-    // Empty constructor
-    public RoundCalculator() {
-    }
-
     // Constructor for creating a RoundCalculator object
     public RoundCalculator(S o) {
         this.object = o;

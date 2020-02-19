@@ -23,16 +23,6 @@ public class PassFail<S> implements Serializable {
         this.pass = pass;
     }
 
-    // Method that returns if the score was a passing score
-    public boolean getPass() {
-        return this.pass;
-    }
-
-    // Method that returns the object
-    public S getObject() {
-        return this.object;
-    }
-
     // Method to print out the object and if it was a passing score
     public String toString() {
         if (pass) {

@@ -463,6 +463,24 @@ public class ConcussionTest {
     }
 
     /**
+     * Functional interface used to make lambda
+     */
+    interface LambdaInterface {
+        long compute(long x, long y);
+    }
+
+    /**
+     * Method that implements the compute method from the above interface
+     * @param x
+     * @param y
+     * @param intf
+     * @return
+     */
+    private long compute(long x, long y, LambdaInterface intf) {
+        return intf.compute(x, y);
+    }
+
+    /**
      * Method that performs stream transformations on the concussion dataset
      */
     public static void performAggregations() {
@@ -476,7 +494,8 @@ public class ConcussionTest {
         List<ConcussionDataRow> data = readInConcussionData();
 
         // Calculating number of people concussed in 2000
-        long numConcussed = data.stream()
+        long numFemalesConcussed = data.stream()
+                .filter(i -> i.getGender().equals("Female"))
                 .filter(i -> i.isConcussed())
                 .mapToInt(i -> i.getCount())
                 .sum();
@@ -488,8 +507,13 @@ public class ConcussionTest {
                 .mapToInt(i -> i.getCount())
                 .sum();
 
+        // Using a lambda to calculate the total number of people concussed
+        LambdaInterface additionOperation = (long x, long y) -> x + y;
+        long totalConcussed = additionOperation.compute(numFemalesConcussed, numMalesConcussed);
+
         // Printing out the results of the calculations
-        System.out.println("Number of people concussed in the year 2000: " + numConcussed);
+        System.out.println("Number of people concussed in the year 2000: " + totalConcussed);
+        System.out.println("Total number of females concussed in dataset: " + numFemalesConcussed);
         System.out.println("Total number of males concussed in dataset: " + numMalesConcussed);
     }
 }
