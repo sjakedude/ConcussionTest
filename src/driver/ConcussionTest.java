@@ -9,6 +9,7 @@
 package driver;
 
 import data.ConcussionDataRow;
+import data.Database;
 import gui.Gui;
 import scores.*;
 
@@ -34,6 +35,10 @@ public class ConcussionTest {
     // Creating a list of Scores
     static List<RoundCalculator> scores = new ArrayList<>();
 
+    // Creating a list of ConcussionDataRow objects
+    static List<ConcussionDataRow> data;
+
+
     static Scanner in = new Scanner(System.in);
 
 
@@ -47,6 +52,14 @@ public class ConcussionTest {
         scores.add(new RoundCalculator(imageScore));
         scores.add(new RoundCalculator(gridScore));
         scores.add(new RoundCalculator(cardScore));
+
+        performAggregations();
+
+        Database.connect();
+        Database.createConcussionTable();
+        Database.insertDataIntoConcussionTable(data);
+
+        System.exit(0);
 
         // Main program loop
         while (true) {
@@ -491,7 +504,7 @@ public class ConcussionTest {
          */
 
         // Reading in the concussion data file
-        List<ConcussionDataRow> data = readInConcussionData();
+        data = readInConcussionData();
 
         // Calculating number of people concussed in 2000
         long numFemalesConcussed = data.stream()
