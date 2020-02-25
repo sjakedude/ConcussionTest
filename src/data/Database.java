@@ -59,6 +59,69 @@ public class Database {
     }
 
     /**
+     * This method is for creating the person table in the database
+     * if it doesn't already exist
+     */
+    public static void createPersonTable() {
+        /*
+         * Precondition: The connect() method has already been called and the connection to the
+         * database was successful
+         * Postcondition: The person table will have been created successfully in the database
+         */
+
+        // Attempting to connect to the database and initialize a statement object
+        try (Connection connection = DriverManager.getConnection(url);
+             Statement statement = connection.createStatement()) {
+
+            // The sql to be executed
+            String sql = "CREATE TABLE IF NOT EXISTS person (" +
+                    "pid INTEGER NOT NULL," +
+                    "name VARCHAR(50) NOT NULL," +
+                    "email VARCHAR(100) NOT NULL," +
+                    "birthday VARCHAR(30) NOT NULL)";
+
+            // Executing the sql
+            statement.executeUpdate(sql);
+            System.out.println("Created the person table successfully");
+        }
+        // Catching any SQL exception
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method is for creating the patient table in the database
+     * if it doesn't already exist
+     */
+    public static void createPatientTable() {
+        /*
+         * Precondition: The connect() method has already been called and the connection to the
+         * database was successful
+         * Postcondition: The patient table will have been created successfully in the database
+         */
+
+        // Attempting to connect to the database and initialize a statement object
+        try (Connection connection = DriverManager.getConnection(url);
+             Statement statement = connection.createStatement()) {
+
+            // The sql to be executed
+            String sql = "CREATE TABLE IF NOT EXISTS patient (" +
+                    "pid INTEGER NOT NULL," +
+                    "last_visit VARCHAR(10) NOT NULL," +
+                    "concussed BOOL NOT NULL)";
+
+            // Executing the sql
+            statement.executeUpdate(sql);
+            System.out.println("Created the college_athletes table successfully");
+        }
+        // Catching any SQL exception
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Method for inserting data from the dataset in the external text file, into
      * the college_athletes table in the database
      * @param data
@@ -107,4 +170,133 @@ public class Database {
         }
     }
 
+    /**
+     * Method for inserting data from the person dataset in the external text file, into
+     * the person table in the database
+     * @param data
+     */
+    public static void insertPersonDataIntoPersonTable(List<PersonDataRow> data) {
+        /*
+         * Precondition1: The connect() method has already been called and the connection to the
+         * database was successful
+         * Precondition2: There exists a person table in the database already
+         * Precondition3: data is a list of PersonDataRow objects
+         * Postcondition: The person table will have been inserted into as many
+         * times as there are PersonDataRow objects passed in
+         */
+
+        System.out.println("pid" + data.get(2).getPid());
+        System.out.println("name" + data.get(2).getName());
+        System.out.println("email" + data.get(2).getEmail());
+
+        // Declaring the sql to be used to insert the data
+        String sql = "INSERT INTO person VALUES(?, ?, ?, ?)";
+        int insertCount = 0;
+
+        // Attempting to connect to the database and initialize the prepared statement object
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            // Looping through every row in the dataset
+            for (PersonDataRow row : data) {
+
+                // Setting the value for each field to be inserted
+                ps.setInt(1, row.getPid());
+                ps.setString(2, row.getName());
+                ps.setString(3, row.getEmail());
+                ps.setString(4, row.getBirthday());
+
+                // Inserting the row into the table
+                ps.executeUpdate();
+
+                // Incrementing the count
+                insertCount++;
+            }
+            // Printing out that the insertions were successful
+            System.out.println("Inserted " + insertCount + " rows successfully");
+        }
+        // Catching any SQL exception
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method for inserting data from the patient dataset in the external text file, into
+     * the patient table in the database
+     * @param data
+     */
+    public static void insertPatientDataIntoPersonTable(List<PatientDataRow> data) {
+        /*
+         * Precondition1: The connect() method has already been called and the connection to the
+         * database was successful
+         * Precondition2: There exists a person table in the database already
+         * Precondition3: data is a list of PatientDataRow objects
+         * Postcondition: The patient table will have been inserted into as many
+         * times as there are PatientDataRow objects passed in
+         */
+
+        // Declaring the sql to be used to insert the data
+        String sql = "INSERT INTO patient VALUES(?, ?, ?)";
+        int insertCount = 0;
+
+        // Attempting to connect to the database and initialize the prepared statement object
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            // Looping through every row in the dataset
+            for (PatientDataRow row : data) {
+
+                // Setting the value for each field to be inserted
+                ps.setInt(1, row.getPid());
+                ps.setString(2, row.getLastVisit());
+                ps.setBoolean(3, row.isConcussed());
+
+                // Inserting the row into the table
+                ps.executeUpdate();
+
+                // Incrementing the count
+                insertCount++;
+            }
+            // Printing out that the insertions were successful
+            System.out.println("Inserted " + insertCount + " rows successfully");
+        }
+        // Catching any SQL exception
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method for printing out the 5 youngest people from the person table
+     */
+    public static void selectOrderedPersonTable() {
+        /*
+         * Precondition1: The connect() method has already been called and the connection to the
+         * database was successful
+         * Precondition2: There exists a person table in the database already with rows inserted
+         * Postcondition: 5 person instances will be printed out
+         */
+
+        String sql = "SELECT name, email, birthday FROM person ORDER BY birthday DESC LIMIT 5";
+
+        try (Connection connection = DriverManager.getConnection(url);
+             Statement query = connection.createStatement()) {
+
+            // Executing the query
+            ResultSet rs = query.executeQuery(sql);
+            System.out.println("5 youngest people in the person table sorted from oldest to youngest:");
+
+            // Fetching the results and printing them
+            while (rs.next()) {
+                String name = rs.getString("name");
+
+                System.out.println("Person: " + name);
+            }
+        }
+        // Catching any SQL exception
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

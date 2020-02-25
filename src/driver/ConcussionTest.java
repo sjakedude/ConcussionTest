@@ -8,13 +8,10 @@
  */
 package driver;
 
-import data.ConcussionDataRow;
-import data.Database;
-import gui.Gui;
+import data.*;
 import scores.*;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +19,6 @@ import java.util.Scanner;
 
 public class ConcussionTest {
 
-    // File locations
-    static String outputObjectScoresFile = "score_objects_scores.dat";
-    static String outputObjectPassFailFile = "score_objects_pass_fail.dat";
-    static String inputConcussionDataFile = "concussion_data.txt";
 
     // Createing 3 scores (right now for testing purposes)
     static Score imageScore = new ImageScore();
@@ -35,10 +28,13 @@ public class ConcussionTest {
     // Creating a list of Scores
     static List<RoundCalculator> scores = new ArrayList<>();
 
-    // Creating a list of ConcussionDataRow objects
-    static List<ConcussionDataRow> data;
+    // Creating lists of Data from text files
+    static List<ConcussionDataRow> concussionData;
+    static List<PersonDataRow> personData;
+    static List<PatientDataRow> patientData;
 
 
+    // Creating a global scanner object to grabbing the user's inputs
     static Scanner in = new Scanner(System.in);
 
 
@@ -53,13 +49,10 @@ public class ConcussionTest {
         scores.add(new RoundCalculator(gridScore));
         scores.add(new RoundCalculator(cardScore));
 
-        performAggregations();
-
-        Database.connect();
-        Database.createConcussionTable();
-        Database.insertDataIntoConcussionTable(data);
-
-        System.exit(0);
+        // Reading in the datasets from the files
+        concussionData = DataIO.importConcussionData();
+        personData = DataIO.importPersonData();
+        patientData = DataIO.importPatientData();
 
         // Main program loop
         while (true) {
@@ -74,7 +67,8 @@ public class ConcussionTest {
             System.out.println("7. Save scores to binary file");
             System.out.println("8. Save scores with pass/fail to binary file");
             System.out.println("9. Perform aggregations on concussion data from file");
-            System.out.println("10. Exit");
+            System.out.println("10. Enter database menu");
+            System.out.println("11. Exit");
 
             String option = in.nextLine();
             switch (option) {
@@ -98,17 +92,88 @@ public class ConcussionTest {
                     break;
                 case "6": saveScores(scores);
                     break;
-                case "7": saveScoresAsObjects(scores);
+                case "7": DataIO.saveScoresAsObjects(scores);
                     break;
-                case "8": saveObjectPassFailScores();
+                case "8": DataIO.saveObjectPassFailScores();
                     break;
                 case "9":
                     performAggregations();
                     break;
                 case "10":
                     // Ending the program
+                    enterDatabaseMenu();
+                case "11":
+                    // Ending the program
                     System.exit(0);
             }
+        }
+    }
+
+    /**
+     * Method for printing out the database menu for performing actions
+     * withing the postgres database
+     */
+    public static void enterDatabaseMenu() {
+        /*
+         * Precondition: None
+         * Postcondition: May have connected to the database and created tables or inserted data
+         */
+
+        // Initializing done to false so the while loop can be broken
+        boolean done = false;
+
+        // Main loop
+        while (!done) {
+            // Pringing out the database scores menu
+            System.out.println("============Database Actions============");
+            System.out.println("1. Connect to database");
+            System.out.println("2. Create the college_athletes table");
+            System.out.println("3. Insert data into college_athletes table");
+            System.out.println("4. Create the person table");
+            System.out.println("5. Insert data into person table");
+            System.out.println("6. Create the patient table");
+            System.out.println("7. Insert data into patient table");
+            System.out.println("8. Print out list of the 5 youngest people");
+            System.out.println("9. Print out list of 5 oldest people who are concussed");
+            System.out.println("10. Return to main menu");
+
+            // Grabbing user input
+            String option = in.nextLine();
+
+            // Calling the appropriate action
+            switch (option) {
+                case "1":
+                    Database.connect();
+                    break;
+                case "2":
+                    Database.createConcussionTable();
+                    break;
+                case "3":
+                    Database.insertDataIntoConcussionTable(concussionData);
+                    break;
+                case "4":
+                    Database.createPersonTable();
+                    break;
+                case "5":
+                    Database.insertPersonDataIntoPersonTable(personData);
+                    break;
+                case "6":
+                    Database.createPatientTable();
+                    break;
+                case "7":
+                    Database.insertPatientDataIntoPersonTable(patientData);
+                    break;
+                case "8":
+                    Database.selectOrderedPersonTable();
+                    break;
+                case "9":
+                    // TODO: Add method
+                    break;
+                case "10":
+                    done = true;
+                    break;
+            }
+
         }
     }
 
@@ -368,114 +433,6 @@ public class ConcussionTest {
     }
 
     /**
-     * Method that takes in a list of Scores and saved them to a binary file
-     * @param scores List of Scores
-     */
-    public static void saveScoresAsObjects(List<RoundCalculator> scores) {
-        /*
-         * Precondition: scores is an ArrayList of Score objects (either CardScore, GridScore, or ImageScore.
-         *
-         * Postcondition: All Score objects are written out to the binary file outputObjectScoresFile.
-         */
-
-        try {
-            try (ObjectOutputStream outFile = new ObjectOutputStream(new FileOutputStream(outputObjectScoresFile));) {
-                // Looping through each score and saving it to the binary file
-                for (RoundCalculator rc : scores)
-                    outFile.writeObject(rc.getObject());
-                }
-            // Catching any file IO Exception and printing the stack trace
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // Printing that the object write out is complete
-            finally {
-            System.out.println("Writing raw objects to dat file completed");
-        }
-    }
-
-    /**
-     * Method that reads in a binary file written out by the saveScoresAsObjects method
-     * and computes whether or not it is a passing or failing score and writes a PassFail
-     * object out to another binary file
-     */
-    public static void saveObjectPassFailScores() {
-        /*
-         * Precondition 1: Score objects are stored in the outputObjectScoresFilenames
-         * Precondition 2: All score objects saved in the outputObjectPassFailFile file have to
-         * have their percentageScores calculated
-         *
-         * Postcondition 1: Score objects will be wrapped in a PassFail object and set as either a pass or fail
-         * Postcondition 2: PassFail objects will be written successfully to the outputObjectPassFailFile binary file
-         */
-
-        // Opening up a binary file writer
-        try (ObjectInputStream inputFile = new ObjectInputStream(new FileInputStream(outputObjectScoresFile));)
-        {
-            // Opening up a binary file reader
-            try (ObjectOutputStream outputFile = new ObjectOutputStream(new FileOutputStream(outputObjectPassFailFile));)
-            {
-                while (true)
-                {
-                    // Creating a PassFail object and reading in a Score object from the binary file
-                    PassFail pf;
-                    Score score = (Score) (inputFile.readObject());
-                    // If the percentage score for that score is greater than 60, create a new PassFail
-                    // object with pass set to true, otherwise set pass to false
-                    if (score.getPercentageScore() > 60) {
-                        pf = new PassFail(score, true);
-                    } else {
-                        pf = new PassFail(score, false);
-                    }
-                    // Writing the PassFail object out to the binary file
-                    outputFile.writeObject(pf);
-                }
-            // Catching the end of file exception that occurs when the entire file has been read
-            } catch (EOFException e) {
-                System.out.println("End of file reached, breaking out of loop");
-            // Catching a class not found exception if there is an error when casting
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            // Catching any file IO Exception that may occur during writing
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        // Catching any file IO Exception that may occur during reading
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Method that reads in a text file which contains many rows of concussion data and parses
-     * it all into a List.
-     */
-    public static List<ConcussionDataRow> readInConcussionData() {
-        /*
-         * Precondition: inputConcussionDataFile is a file that contains concussion data separated by white space
-         *
-         * Postcondition: Score objects will be wrapped in a PassFail object and set as either a pass or fail
-         */
-
-        // Creating an empty list of ConcussionDataRows
-        List<ConcussionDataRow> data = new ArrayList<>();
-        try {
-            Scanner scan = new Scanner(new File(inputConcussionDataFile));
-            // While a new line exists in the data file, read the next line
-            while (scan.hasNextLine()) {
-                // Split the line on white space and create a new ConcussionDataRow object and insert it into the list
-                String[] tokens = scan.nextLine().split("\\s+");
-                data.add(new ConcussionDataRow(tokens[0], tokens[1], tokens[2], tokens[3], tokens[4]));
-            }
-        // Catching a file not found exception
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        // Returning the fully populated list of ConcussionDataRows
-        return data;
-    }
-
-    /**
      * Functional interface used to make lambda
      */
     interface LambdaInterface {
@@ -503,18 +460,15 @@ public class ConcussionTest {
          * Postcondition: Results of the below calculations are printed on the screen
          */
 
-        // Reading in the concussion data file
-        data = readInConcussionData();
-
         // Calculating number of people concussed in 2000
-        long numFemalesConcussed = data.stream()
+        long numFemalesConcussed = concussionData.stream()
                 .filter(i -> i.getGender().equals("Female"))
                 .filter(i -> i.isConcussed())
                 .mapToInt(i -> i.getCount())
                 .sum();
 
         // Calculating number of males concussed
-        long numMalesConcussed = data.stream()
+        long numMalesConcussed = concussionData.stream()
                 .filter(i -> i.getGender().equals("Male"))
                 .filter(i -> i.isConcussed())
                 .mapToInt(i -> i.getCount())
