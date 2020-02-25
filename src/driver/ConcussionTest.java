@@ -134,7 +134,7 @@ public class ConcussionTest {
             System.out.println("6. Create the patient table");
             System.out.println("7. Insert data into patient table");
             System.out.println("8. Print out list of the 5 youngest people");
-            System.out.println("9. Print out list of 5 oldest people who are concussed");
+            System.out.println("9. Print out list of 5 people born after 12/05/2019 @ 5:21pm (UTC) who are concussed");
             System.out.println("10. Return to main menu");
 
             // Grabbing user input
@@ -167,7 +167,7 @@ public class ConcussionTest {
                     Database.selectOrderedPersonTable();
                     break;
                 case "9":
-                    // TODO: Add method
+                    Database.selectPatientsWhoHaveLateBirthday();
                     break;
                 case "10":
                     done = true;

@@ -185,10 +185,6 @@ public class Database {
          * times as there are PersonDataRow objects passed in
          */
 
-        System.out.println("pid" + data.get(2).getPid());
-        System.out.println("name" + data.get(2).getName());
-        System.out.println("email" + data.get(2).getEmail());
-
         // Declaring the sql to be used to insert the data
         String sql = "INSERT INTO person VALUES(?, ?, ?, ?)";
         int insertCount = 0;
@@ -286,6 +282,48 @@ public class Database {
             // Executing the query
             ResultSet rs = query.executeQuery(sql);
             System.out.println("5 youngest people in the person table sorted from oldest to youngest:");
+
+            // Fetching the results and printing them
+            while (rs.next()) {
+                String name = rs.getString("name");
+
+                System.out.println("Person: " + name);
+            }
+        }
+        // Catching any SQL exception
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method for printing out the 5 people from the person/patient table
+     * who were born after 12/05/2019 @ 5:21pm (UTC)
+     */
+    public static void selectPatientsWhoHaveLateBirthday() {
+        /*
+         * Precondition1: The connect() method has already been called and the connection to the
+         * database was successful
+         * Precondition2: There exists a person table and patient table in the database already with rows inserted
+         * and there are matching pids on both tables
+         * Postcondition: 5 person instances will be printed out
+         */
+
+        String sql = "SELECT name " +
+                "FROM person pe, patient pa " +
+                "WHERE pe.pid = pa.pid " +
+                "AND " +
+                "pa.concussed = 'false' " +
+                "AND " +
+                "pe.birthday > '1575566519' " +
+                "LIMIT 5";
+
+        try (Connection connection = DriverManager.getConnection(url);
+             Statement query = connection.createStatement()) {
+
+            // Executing the query
+            ResultSet rs = query.executeQuery(sql);
+            System.out.println("5 people who are concussed and were born after 12/05/2019 @ 5:21pm (UTC):");
 
             // Fetching the results and printing them
             while (rs.next()) {
