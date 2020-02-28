@@ -1,3 +1,11 @@
+/**
+ * CS-622 HW 2
+ * Database.java
+ * Purpose: Interacting with an external database using JDBC
+ *
+ * @author Jake Stephens
+ * @version 1.0 2/28/2020
+ */
 package data;
 
 import java.sql.*;

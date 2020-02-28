@@ -1,3 +1,11 @@
+/**
+ * CS-622 HW 2
+ * ConcussionDataRow.java
+ * Purpose: Class for holding the data from the external text file dataset of concussion incidents
+ *
+ * @author Jake Stephens
+ * @version 1.0 2/11/2020
+ */
 package data;
 
 public class ConcussionDataRow {

@@ -10,6 +10,7 @@ package driver;
 
 import data.*;
 import scores.*;
+import scores.ScoreCalculationException;
 
 import java.io.*;
 import java.text.DecimalFormat;
@@ -102,6 +103,7 @@ public class ConcussionTest {
                 case "10":
                     // Ending the program
                     enterDatabaseMenu();
+                    break;
                 case "11":
                     // Ending the program
                     System.exit(0);

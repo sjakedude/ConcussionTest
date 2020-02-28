@@ -1,3 +1,11 @@
+/**
+ * CS-622 HW 2
+ * PersonDataRow.java
+ * Purpose: Class for holding the data from the external text file dataset of people
+ *
+ * @author Jake Stephens
+ * @version 1.0 2/11/2020
+ */
 package data;
 
 public class PersonDataRow {

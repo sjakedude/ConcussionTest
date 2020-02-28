@@ -1,3 +1,12 @@
+/**
+ * CS-622 HW 2
+ * PatientDataRow.java
+ * Purpose: Class for holding the data from the external text file dataset of patients who
+ * were seen for concussion-like symptoms
+ *
+ * @author Jake Stephens
+ * @version 1.0 2/11/2020
+ */
 package data;
 
 public class PatientDataRow {

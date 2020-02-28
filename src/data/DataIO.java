@@ -5,18 +5,23 @@ import scores.RoundCalculator;
 import scores.Score;
 
 import java.io.*;
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
 public class DataIO {
 
+    // Initializing the file locations
     static String outputObjectScoresFile = "score_objects_scores.dat";
     static String outputObjectPassFailFile = "score_objects_pass_fail.dat";
     static String inputConcussionDataFile = "concussion_data.txt";
     static String inputPersonDataRowFile = "person_data.txt";
-    static String inputPatientDataRowFile = "patient_data.txt";
+    static String inputPatientDataRowFile1 = "patient_data_1.txt";
+    static String inputPatientDataRowFile2 = "patient_data_2.txt";
+
+    // Initializing the synchronized patient list
+    static List<PatientDataRow> patientDataRows = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * Method that reads in a text file which contains many rows of concussion data and parses
@@ -77,11 +82,18 @@ public class DataIO {
         return data;
     }
 
+    public static List<PatientDataRow> importPatientData() {
+
+        DataImportThread thread = new DataImportThread(inputPatientDataRowFile1);
+        thread.start();
+        importPatientData(inputPatientDataRowFile2);
+        return patientDataRows;
+    }
+
     /**
      * This method imports the patient data into an array list of PatientDataRow objects
-     * @return Array list of PatientDataRow objects
      */
-    public static List<PatientDataRow> importPatientData() {
+    public static void importPatientData(String fileName) {
         /*
          * Precondition: inputPersonDataRowFile is a file that contains person data separated by |
          *
@@ -89,22 +101,51 @@ public class DataIO {
          * array will be the same as the number of rows in the text file
          */
 
-        // Creating an empty list of PersonDataRow
-        List<PatientDataRow> data = new ArrayList();
         try {
-            Scanner scan = new Scanner(new File(inputPatientDataRowFile));
+            Scanner scan = new Scanner(new File(fileName));
             // While a new line exists in the data file, read the next line
             while (scan.hasNextLine()) {
                 // Split the line on white space and create a new PersonDataRow object and insert it into the list
                 String[] tokens = scan.nextLine().split("\\s+");
-                data.add(new PatientDataRow(Integer.parseInt(tokens[0]), tokens[1], Boolean.parseBoolean(tokens[2])));
+                patientDataRows.add(new PatientDataRow(Integer.parseInt(tokens[0]), tokens[1], Boolean.parseBoolean(tokens[2])));
             }
             // Catching a file not found exception
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        // Returning the fully populated list of PatientDataRow
-        return data;
+    }
+
+
+    /**
+     * Private Thread class for reading in a text file of data and
+     * populating an array list with PatientDataRow objects
+     */
+    private static class DataImportThread extends Thread {
+
+        // Instance variable for the filename
+        private String fileName;
+
+        // Constructor for the private class
+        public DataImportThread(String fileName) {
+            this.fileName = fileName;
+        }
+
+        // The implementation of the run method
+        @Override
+        public void run() {
+            try {
+                Scanner in = new Scanner(new File(this.fileName));
+                // While a new line exists in the data file, read the next line
+                while (in.hasNextLine()) {
+                    // Split the line on white space and create a new PersonDataRow object and insert it into the list
+                    String[] tokens = in.nextLine().split("\\s+");
+                    patientDataRows.add(new PatientDataRow(Integer.parseInt(tokens[0]), tokens[1], Boolean.parseBoolean(tokens[2])));
+                }
+                // Catching a file not found exception
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

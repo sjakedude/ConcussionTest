@@ -8,10 +8,13 @@
  */
 package junit;
 
+import data.DataIO;
 import driver.ConcussionTest;
 import org.junit.Test;
 import scores.*;
+import scores.ScoreCalculationException;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,5 +96,4 @@ public class ConcussionTest_Test {
         assertEquals(3, testImageRounds.getRounds());
         assertEquals("The user's image score numCorrect: 4 and numMissed: 5 with rounds: 3", testImageRounds.toString());
     }
-
 }
