@@ -1,3 +1,11 @@
+/**
+ * CS-622 HW 2
+ * DataIO.java
+ * Purpose: Interacting with external text files
+ *
+ * @author Jake Stephens
+ * @version 1.0 2/28/2020
+ */
 package data;
 
 import scores.PassFail;
@@ -82,6 +90,9 @@ public class DataIO {
         return data;
     }
 
+    /**
+     * This method orchestrates the parsing of data from text files into 1 synchronized array list
+     */
     public static List<PatientDataRow> importPatientData() {
 
         DataImportThread thread = new DataImportThread(inputPatientDataRowFile1);

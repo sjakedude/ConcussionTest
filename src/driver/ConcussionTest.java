@@ -71,6 +71,7 @@ public class ConcussionTest {
             System.out.println("10. Enter database menu");
             System.out.println("11. Exit");
 
+            // Getting the user's input
             String option = in.nextLine();
             switch (option) {
                 case "1": enterScoresMenu();
